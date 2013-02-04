@@ -415,7 +415,8 @@ public class PatternLayout extends Layout {
 
 
   // output buffer appended to when format() is invoked
-  private StringBuffer sbuf = new StringBuffer(BUF_SIZE);
+  // This is global obj, change to use per-thread local sbuf instead. (Xinfeng)
+  //private StringBuffer sbuf = new StringBuffer(BUF_SIZE);
 
   private String pattern;
 
@@ -493,19 +494,16 @@ public class PatternLayout extends Layout {
      Produces a formatted string as specified by the conversion pattern.
   */
   public String format(LoggingEvent event) {
-    // Reset working stringbuffer
-    if(sbuf.capacity() > MAX_CAPACITY) {
-      sbuf = new StringBuffer(BUF_SIZE);
-    } else {
-      sbuf.setLength(0);
-    }
 
+
+    StringBuffer sb = new StringBuffer(BUF_SIZE);
     PatternConverter c = head;
 
     while(c != null) {
-      c.format(sbuf, event);
+      c.format(sb, event);
       c = c.next;
     }
-    return sbuf.toString();
+    
+    return sb.toString();
   }
 }

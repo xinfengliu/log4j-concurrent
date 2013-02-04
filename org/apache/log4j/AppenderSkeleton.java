@@ -62,7 +62,7 @@ public abstract class AppenderSkeleton implements Appender, OptionHandler {
      Is this appender closed? 
    */
   protected boolean closed = false;
-
+     
     /**
      * Create new instance.
      */
@@ -226,17 +226,13 @@ public abstract class AppenderSkeleton implements Appender, OptionHandler {
     * AppenderSkeleton#append} method.
     * */
   public
-  synchronized 
   void doAppend(LoggingEvent event) {
-    if(closed) {
-      LogLog.error("Attempted to append to closed appender named ["+name+"].");
-      return;
-    }
-    
+     
     if(!isAsSevereAsThreshold(event.getLevel())) {
       return;
     }
 
+    //looking at the other codes, below filter seems no need to synchronize. (Xinfeng)
     Filter f = this.headFilter;
     
     FILTER_LOOP:
@@ -247,8 +243,13 @@ public abstract class AppenderSkeleton implements Appender, OptionHandler {
       case Filter.NEUTRAL: f = f.getNext();
       }
     }
-    
-    this.append(event);    
+
+    if(!closed){  
+       this.append(event);    
+    }else{
+      LogLog.error("Attempted to append to closed appender named ["+name+"].");
+    }
+
   }
 
   /** 
