@@ -3,7 +3,7 @@ log4j-concurrent
 
 Improve log4j performance under mutli-threaded env (based on log4j-1.2.17).
 
-Tested against the file appender and its descendants. The result shows over 30% improvement in latency or about 50% improvement in throughput under 200 threads that perform pure log writing to the same file on Sparc T4-2 server. In read workloads, the improvement is even bigger.
+Tested against the file appender and its descendants. The result shows over 30% improvement in latency or about 50% improvement in throughput under 200 threads that perform pure log writing to the same file on Sparc T4-2 server. In real workloads, the improvement is even bigger.
 
 Usage: use JDK 1.5 or later; set bufferedIO to true and bufferSize to about 128K in log4j configuration.
 
